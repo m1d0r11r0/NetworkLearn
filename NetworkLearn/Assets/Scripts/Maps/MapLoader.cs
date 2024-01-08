@@ -36,8 +36,10 @@ public class MapLoader : MonoBehaviour
         _TreeRoot = new GameObject("TreeRoot").transform;
         _TreeRoot.transform.parent = _Transform;
 
+#if false
         // NOTE:仮でマップロード処理の配置
         LoadMap(0);
+#endif
     }
 
     /// <summary>
