@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8775432226369625892}
   - component: {fileID: 8775432226369625893}
+  - component: {fileID: 5672941995197281562}
   m_Layer: 0
   m_Name: MapRoot
   m_TagString: Untagged
@@ -46,11 +47,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Maps:
   - {fileID: 11400000, guid: ee204626648aa0848a0c40f8106b6c32, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 6553d14fd7733e94d9acd398c775fdd5, type: 2}
+  - {fileID: 11400000, guid: 4acc3db3b78bb194c94ba756d3012ced, type: 2}
   _WallPref: {fileID: 98196532061838803, guid: 313e07d41a407824997c929654c5a866, type: 3}
   _TreePref: {fileID: 848443413990469266, guid: 7eb8e9a311752164994e82fd93cc1600,
     type: 3}
   _FloorPref: {fileID: 5475347081125764854, guid: 1755d1c45215e0046ac9daa24961b025,
     type: 3}
   _MapCenter: {x: 0, y: 0, z: 0}
+--- !u!114 &5672941995197281562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775432226369625894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2522605a1f29234a8ee60bb1409fef2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
