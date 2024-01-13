@@ -50,7 +50,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6553d14fd7733e94d9acd398c775fdd5, type: 2}
   - {fileID: 11400000, guid: 4acc3db3b78bb194c94ba756d3012ced, type: 2}
   _WallPref: {fileID: 98196532061838803, guid: 313e07d41a407824997c929654c5a866, type: 3}
-  _TreePref: {fileID: 848443413990469266, guid: 7eb8e9a311752164994e82fd93cc1600,
+  _TreePref: {fileID: 5821611749205334198, guid: 7f49ba9ff2ac675429245f2e7bf241d5,
     type: 3}
   _FloorPref: {fileID: 5475347081125764854, guid: 1755d1c45215e0046ac9daa24961b025,
     type: 3}
