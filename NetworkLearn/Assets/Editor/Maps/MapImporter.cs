@@ -58,7 +58,7 @@ public class MapImporter : Editor
                 if (result)
                 {
                     string savePath = string.Format(MAP_SAVE_PATH, assetInst.MapName);
-                    if (File.Exists(savePath)) AssetDatabase.DeleteAsset(savePath);
+                    //if (File.Exists(savePath)) AssetDatabase.DeleteAsset(savePath);
                     AssetDatabase.CreateAsset(assetInst, savePath);
                 }
             }
