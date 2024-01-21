@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
 public class MapLoader : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class MapLoader : MonoBehaviour
     private Transform _FloorRoot;       // 床オブジェクトのルート
     private Transform _WallRoot;        // 壁オブジェクトのルート
     private Transform _TreeRoot;        // 樹木オブジェクトのルート
+
+    public NetworkRigidbody[] _Players = new NetworkRigidbody[2];
 
     private void Awake()
     {
@@ -112,12 +115,10 @@ public class MapLoader : MonoBehaviour
                 break;
 
             case MapData.LoadType.Player1:
-                // TODO:プレイヤー1座標の指定
-                //      他のクラスから指定する可能性もあり
+                _Players[0]?.TeleportToPosition(mapPos);
                 break;
             case MapData.LoadType.Player2:
-                // TODO:プレイヤー2座標の指定
-                //      他のクラスから指定する可能性もあり
+                _Players[1]?.TeleportToPosition(mapPos);
                 break;
 
             case MapData.LoadType.Item01:
