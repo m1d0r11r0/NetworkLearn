@@ -11,12 +11,16 @@ public class MapLoader : MonoBehaviour
     [SerializeField] GameObject _WallPref;      // 壁用プレハブ
     [SerializeField] GameObject _TreePref;      // 樹木プレハブ
     [SerializeField] GameObject _FloorPref;     // 床用プレハブ
+    [SerializeField] GameObject _GoalPref;      // ゴール用プレハブ
+    [SerializeField] GameObject[] _ItemPrefs;   // アイテム用プレハブ
     [SerializeField] Vector3 _MapCenter;        // マップの中心点
 
     private Transform _Transform;       // 自分のTransformキャッシュ
     private Transform _FloorRoot;       // 床オブジェクトのルート
     private Transform _WallRoot;        // 壁オブジェクトのルート
     private Transform _TreeRoot;        // 樹木オブジェクトのルート
+    private Transform _ItemRoot;        // アイテムオブジェクトのルート
+    private Transform _GoalRoot;        // ゴール用オブジェクトのルート
 
     public NetworkRigidbody[] _Players = new NetworkRigidbody[2];
 
@@ -38,6 +42,10 @@ public class MapLoader : MonoBehaviour
         _WallRoot.transform.parent = _Transform;
         _TreeRoot = new GameObject("TreeRoot").transform;
         _TreeRoot.transform.parent = _Transform;
+        _ItemRoot = new GameObject("ItemRoot").transform;
+        _ItemRoot.transform.parent = _Transform;
+        _GoalRoot = new GameObject("GoalRoot").transform;
+        _GoalRoot.transform.parent = _Transform;
 
 #if false
         // NOTE:仮でマップロード処理の配置
@@ -115,10 +123,10 @@ public class MapLoader : MonoBehaviour
                 break;
 
             case MapData.LoadType.Player1:
-                _Players[0]?.TeleportToPosition(mapPos);
+                LoadPlayer(_Players[0], mapPos, 1);
                 break;
             case MapData.LoadType.Player2:
-                _Players[1]?.TeleportToPosition(mapPos);
+                LoadPlayer(_Players[1], mapPos, 0);
                 break;
 
             case MapData.LoadType.Item01:
@@ -129,9 +137,18 @@ public class MapLoader : MonoBehaviour
             case MapData.LoadType.Item06:
             case MapData.LoadType.Item07:
             case MapData.LoadType.Item08:
-                // TODO:アイテムの配置処理
-                //      アイテムの持ち方が未定なのでまだ配置処理を作らない
+                int itemIdx = type - MapData.LoadType.Item01;
+                GameObject.Instantiate(_ItemPrefs[itemIdx], mapPos, Quaternion.identity, _ItemRoot);
                 break;
         }
+    }
+
+    private void LoadPlayer(NetworkRigidbody netRb, Vector3 position, int targetPlayerId)
+    {
+        if (netRb == null) return;
+        netRb.TeleportToPosition(position);
+        var visual = netRb.Runner.GetPlayerObject(targetPlayerId).GetComponent<PlayerVisual>();
+        var goalObj = GameObject.Instantiate(_GoalPref, position, Quaternion.identity, _GoalRoot).GetComponentInChildren<GoalObject>();
+        goalObj.Initialize(targetPlayerId, visual._Color);
     }
 }

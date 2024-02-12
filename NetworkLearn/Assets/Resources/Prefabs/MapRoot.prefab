@@ -54,7 +54,16 @@ MonoBehaviour:
     type: 3}
   _FloorPref: {fileID: 5475347081125764854, guid: 1755d1c45215e0046ac9daa24961b025,
     type: 3}
+  _GoalPref: {fileID: 1680873262897899266, guid: 4a75e789b6dee044491ecd7c05392cb1,
+    type: 3}
+  _ItemPrefs:
+  - {fileID: 5665034358354404741, guid: ee7d8168a44024749a204a40c2b12111, type: 3}
+  - {fileID: 1882289285079214220, guid: 2ba23046736206a4da65d30b2851c11d, type: 3}
+  - {fileID: 4396053541975452027, guid: afe503f34de288d4ba1ff995de8b2d4c, type: 3}
   _MapCenter: {x: 0, y: 0, z: 0}
+  _Players:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &5672941995197281562
 MonoBehaviour:
   m_ObjectHideFlags: 0

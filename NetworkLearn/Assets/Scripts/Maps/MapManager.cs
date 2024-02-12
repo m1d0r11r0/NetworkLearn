@@ -11,10 +11,4 @@ public class MapManager : MonoBehaviour
     {
         Loader = GetComponent<MapLoader>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

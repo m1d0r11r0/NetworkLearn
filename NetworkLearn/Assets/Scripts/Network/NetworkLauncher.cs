@@ -20,6 +20,7 @@ public class NetworkLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _NetRunnerInst;
     private PlayerInput _PlayerInput;
     private PlayerInput _Input;
+    private bool _IsPause = false;
     public PlayerInput Input => _Input;
 
     // Start is called before the first frame update
@@ -49,13 +50,9 @@ public class NetworkLauncher : MonoBehaviour, INetworkRunnerCallbacks
         var result = await _NetRunnerInst.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
-
             SceneManager = _NetRunnerInst.GetComponent<NetworkSceneManagerDefault>(),
-
             SessionProperties = sessionParams, 
-
             PlayerCount = 2,
-
             Scene = scene,
         });
 
@@ -63,6 +60,7 @@ public class NetworkLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("Connected Game!");
             _ConnectUI.enabled = false;
+
         }
         else
         {
@@ -89,7 +87,10 @@ public class NetworkLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         // 参加したプレイヤーのアバターを生成する
         var avatar = runner.Spawn(_PlayerPref, spawnPosition, Quaternion.identity, player);
-        avatar.GetComponent<PlayerInputManager>().JoinedID = runner.ActivePlayers.Count();
+
+        var inst = avatar.GetComponent<PlayerInputManager>();
+        inst.PlayerId = player;
+
         // プレイヤー（PlayerRef）とアバター（NetworkObject）を関連付ける
         runner.SetPlayerObject(player, avatar);
     }
@@ -101,11 +102,25 @@ public class NetworkLauncher : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.TryGetPlayerObject(player, out var avatar))
         {
             runner.Despawn(avatar);
+            _IsPause = true;
+            MyDialog dialog = new();
+            dialog.ShowDialog(
+                MyDialog.Type.Ok,
+                "接続が切断されました。\nタイトルに戻ります。",
+                (_) => {
+                    runner.Shutdown(
+                        destroyGameObject: true,
+                        shutdownReason: ShutdownReason.Error
+                        );
+                    _IsPause = false;
+                    MySceneManager.OpenSceneSync(MySceneManager.Scene.Title);
+                });
         }
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        if (_IsPause) return;
         if (_PlayerInput == null)
         {
             Debug.LogError("_PlayerInput is null");
@@ -117,15 +132,31 @@ public class NetworkLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+        if (_IsPause) return;
+        MyDialog dialog = new();
+        dialog.ShowDialog(
+            MyDialog.Type.Ok,
+            "ホストと接続が切断されました。\nタイトルに戻ります。",
+            (_) => {
+                MySceneManager.OpenSceneSync(MySceneManager.Scene.Title);
+            });
+    }
 
     public void OnConnectedToServer(NetworkRunner runner) { }
 
-    public void OnDisconnectedFromServer(NetworkRunner runner) { }
+    public void OnDisconnectedFromServer(NetworkRunner runner) 
+    {
+        Debug.Log("OnDisconnectedFromServer");
+    }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
 
-    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+    {
+        Debug.Log("OnConnectFailed");
+    }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 

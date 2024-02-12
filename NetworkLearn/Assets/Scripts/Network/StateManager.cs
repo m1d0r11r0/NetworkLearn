@@ -26,8 +26,20 @@ public class StateManager : NetworkBehaviour
     [Networked]
     public int ReadyCount { get; set; }
 
+    public int WinPlayerId;
+
+    // 疑似シングルトン
+    private static StateManager _Instance;
+    public static StateManager Instance => _Instance;
+
     public delegate void OnUpdateState(NetworkState newState);
     public static OnUpdateState onUpdateState;
+
+    public override void Spawned()
+    {
+        base.Spawned();
+        _Instance = this;
+    }
 
     public override void FixedUpdateNetwork()
     {
@@ -57,7 +69,7 @@ public class StateManager : NetworkBehaviour
     protected void OnUpdateMatching()
     {
         // 現状で2人制限をかけると何かと厄介なので、コンパイルオプションで消す
-#if true
+#if false
         if (Runner.SessionInfo.PlayerCount == Runner.SessionInfo.MaxPlayers)
         {
             CurrentState = NetworkState.SelectStage;
@@ -96,7 +108,7 @@ public class StateManager : NetworkBehaviour
     public void Rpc_ReadyGame()
     {
         ReadyCount++;
-#if true
+#if false
         if (ReadyCount == Runner.SessionInfo.MaxPlayers)
 #else
         if (ReadyCount == 1)
@@ -127,6 +139,12 @@ public class StateManager : NetworkBehaviour
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_UnreadyGame()
+    {
+        ReadyCount--;
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_GameOver()
     {
         ReadyCount--;
     }
