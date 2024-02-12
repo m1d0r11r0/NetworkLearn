@@ -93,6 +93,7 @@ public class PlayerInputManager : NetworkBehaviour
         if (other.TryGetComponent<ItemView>(out var item))
         {
             OnGetItem(item.Item);
+            other.gameObject.SetActive(false);
         }
     }
 }
